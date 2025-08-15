@@ -1,0 +1,14 @@
+#!name = Bandwagon 剩余流量信息
+#!desc = 利用Panel展示 Bandwagon 流量使用情况
+#!author = nazocthun forked from 412999826
+#!category = Panels
+#!date = 2025-08-16
+#!version = 1.0
+#!arguments = veid, apikey, title: "Bandwagon", icon: "xserve", color: "#ebc142"
+
+
+[Panel]
+bandwagon-info = script-name=bandwagon,update-interval=7200
+
+[Script]
+bandwagon = type=generic,timeout=5,script-path=https://raw.githubusercontent.com/nazocthun/iSurf/refs/heads/main/Surge/Modules/Bandwagon-Traffic/bandwagon-traffic.js,script-update-interval=86400,argument=veid={{{veid}}}&apikey={{{apikey}}}&title={{{title}}}&icon={{{icon}}}&color={{{color}}}

@@ -1,0 +1,14 @@
+#!name = Racknerd 剩余流量信息
+#!desc = 利用Panel展示Racknerd流量使用情况
+#!author = nazocthun
+#!homepage = 
+#!category = Panels
+#!date = 2025-08-16
+#!version = 1.0
+#!arguments = apikey, hash, title: "Racknerd", icon: "xserve", color: "#FF3C83"
+
+[Panel]
+Racknerd-info = script-name=Racknerd,update-interval=7200
+
+[Script]
+Racknerd = type=generic,timeout=5,script-path=https://raw.githubusercontent.com/nazocthun/iSurf/refs/heads/main/Surge/Modules/Racknerd-Traffic/racknerd-traffic.js,script-update-interval=86400,argument=hash={{{hash}}}&apikey={{{apikey}}}&title={{{title}}}&icon={{{icon}}}&color={{{color}}}
