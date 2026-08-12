@@ -5,9 +5,11 @@ $httpClient.get(url, function (error, response, data) {
   let jsonData = JSON.parse(data);
   let used = jsonData.data_counter;
   let total = jsonData.plan_monthly_data;
+  let remain = total - used;
   let resetday = jsonData.data_next_reset;
   let percent = total ? ((used / total) * 100).toFixed(2) : "0.00";
   let content = [`Traffic: ${bytesToSize(used)}  (${percent}%) / ${bytesToSize(total)}`];
+  content.push(`Remain: ${bytesToSize(remain)}.`);
   content.push(`Reset in ${formatTime(resetday)}, ${getResetDaysLeft(resetday)} days left.`);
 
   $done({
