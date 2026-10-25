@@ -310,7 +310,7 @@ function formatInstance(instance) {
     const used = instance.incoming + instance.outgoing;
     const left = Math.max(instance.quota - used, 0);
     return [
-        instance.name,
+        `${instance.region}: ${instance.name}`,
         `Used: ${formatGigabytes(used)} / ${formatGigabytes(instance.quota)} GB (${instance.percent.toFixed(2)}%)`,
         `Left: ${formatGigabytes(left)} GB`,
         `Bill date: ${billDate()}`,
