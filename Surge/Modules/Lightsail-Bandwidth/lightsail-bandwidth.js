@@ -34,11 +34,12 @@ async function main() {
     };
     const instances = parseInstances(arg("instances"));
 
-    if (
-        isPlaceholder(credentials.accessKeyId) ||
-        isPlaceholder(credentials.secretAccessKey)
-    ) {
-        throw new Error("missing AWS credentials");
+    const missing = [
+        isPlaceholder(credentials.accessKeyId) && "ACCESS_KEY_ID",
+        isPlaceholder(credentials.secretAccessKey) && "SECRET_ACCESS_KEY",
+    ].filter(Boolean);
+    if (missing.length) {
+        throw new Error(`missing module parameter: ${missing.join(", ")}`);
     }
 
     const usage = await Promise.all(
