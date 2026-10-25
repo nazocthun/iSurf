@@ -32,27 +32,56 @@ async function main() {
         accessKeyId: arg("ACCESS_KEY_ID"),
         secretAccessKey: arg("SECRET_ACCESS_KEY"),
     };
-    const instanceName = arg("instance_name");
-    const region = arg("region");
+    const instances = parseInstances(arg("instances"));
 
     if (
-        isPlaceholder(instanceName) ||
-        isPlaceholder(region) ||
         isPlaceholder(credentials.accessKeyId) ||
         isPlaceholder(credentials.secretAccessKey)
     ) {
-        throw new Error("missing instance name, region or AWS credentials");
+        throw new Error("missing AWS credentials");
     }
 
-    const instance = await findInstance(instanceName, region, credentials);
-    const usage = await loadUsage(instance, credentials);
-    const state = stateForUsage(usage.percent);
+    const usage = await Promise.all(
+        instances.map(([name, region]) =>
+            loadInstanceUsage(name, region, credentials),
+        ),
+    );
+    const highestPercent = Math.max(...usage.map((item) => item.percent));
+    const state = stateForUsage(highestPercent);
 
     $done({
         title: TITLE,
-        content: formatInstance(usage),
+        content: usage.map(formatInstance).join("\n\n"),
         icon: state.icon,
         "icon-color": state.color,
+    });
+}
+
+async function loadInstanceUsage(name, region, credentials) {
+    const instance = await findInstance(name, region, credentials);
+    return loadUsage(instance, credentials);
+}
+
+function parseInstances(value) {
+    const entries = String(value || "")
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+    if (!entries.length) throw new Error("no instances configured");
+    const seen = new Set();
+    return entries.map((entry) => {
+        const separator = entry.lastIndexOf("@");
+        if (separator <= 0 || separator === entry.length - 1) {
+            throw new Error(
+                `invalid instance entry: ${entry} (expected name@region)`,
+            );
+        }
+        const name = entry.slice(0, separator);
+        const region = entry.slice(separator + 1);
+        const key = `${name}@${region}`;
+        if (seen.has(key)) throw new Error(`duplicate instance: ${key}`);
+        seen.add(key);
+        return [name, region];
     });
 }
 
