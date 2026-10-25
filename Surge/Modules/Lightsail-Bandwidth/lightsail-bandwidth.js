@@ -39,9 +39,7 @@ async function main() {
         isPlaceholder(credentials.secretAccessKey) && "SECRET_ACCESS_KEY",
     ].filter(Boolean);
     if (missing.length) {
-        throw new Error(
-            `missing module parameter: ${missing.join(", ")}\nDEBUG raw: ${JSON.stringify(typeof $argument === "undefined" ? "<undefined>" : $argument).slice(0, 300)}`,
-        );
+        throw new Error(`missing module parameter: ${missing.join(", ")}`);
     }
 
     const usage = await Promise.all(
