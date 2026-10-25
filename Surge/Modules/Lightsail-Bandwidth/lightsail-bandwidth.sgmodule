@@ -1,0 +1,14 @@
+#!name = Lightsail 剩余流量信息
+#!desc = 利用Panel展示多台 Lightsail 实例的月度流量使用情况（按区域直查，无全区域扫描）
+#!author = nazocthun forked from gholts
+#!category = Panels
+#!date = 2026-10-25
+#!version = 1.1
+#!arguments = instances, ACCESS_KEY_ID, SECRET_ACCESS_KEY
+#!arguments-desc = instances\n  └ 实例@区域 列表，逗号分隔，如 aws-sgp@ap-southeast-1,aws-jp@ap-northeast-1\nACCESS_KEY_ID\n  └ AWS Access Key ID\nSECRET_ACCESS_KEY\n  └ AWS Secret Access Key
+
+[Panel]
+lightsail-info = script-name=lightsail,update-interval=3600
+
+[Script]
+lightsail = type=generic,timeout=60,script-path=https://raw.githubusercontent.com/nazocthun/iSurf/main/Surge/Modules/Lightsail-Bandwidth/lightsail-bandwidth.js,script-update-interval=86400,argument="instances={{{instances}}}&ACCESS_KEY_ID={{{ACCESS_KEY_ID}}}&SECRET_ACCESS_KEY={{{SECRET_ACCESS_KEY}}}"
